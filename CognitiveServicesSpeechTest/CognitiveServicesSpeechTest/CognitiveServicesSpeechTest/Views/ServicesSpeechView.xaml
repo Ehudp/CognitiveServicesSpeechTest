@@ -9,10 +9,19 @@
         <viewmodels:ServicesSpeechViewModel />
     </ContentView.BindingContext>
     <StackLayout>
-        <Button Text="Enable Microphonet" Command="{Binding EnableMicrophonetCommand}"/> 
-        <Button Text="Speech To Text" Command="{Binding SpeechToTextCommand}" />
-        <Button Text="Text To Speech" Command="{Binding TextToSpeechCommand}" />
-        <Button Text="Text To Speech With Keyword" Command="{Binding TextToSpeechWithKeyword}" />
+        <Button Text="Enable Microphonet" Command="{Binding EnableMicrophonetCommand}" />
+        <Button Text="Text To Speech Once" Command="{Binding TextToSpeechCommand}" />
+
+        <Button Text="Speech To Text Once" Command="{Binding SpeechToTextOnceCommand}" />
+        <Button Text="Speech To Text Continuous" Command="{Binding SpeechToTextContinuousCommand}" />
+
+        <Button Text="Speech To Text With Keyword Once"
+            Command="{Binding SpeecToTexthWithKeywordOnceCommand}" />
+
+        <Button Text="Speech To Text With Keyword Continuous"
+            Command="{Binding SpeechToTextWithKeywordContinuousCommand}" />
+
+
     </StackLayout>
 
 </ContentView>

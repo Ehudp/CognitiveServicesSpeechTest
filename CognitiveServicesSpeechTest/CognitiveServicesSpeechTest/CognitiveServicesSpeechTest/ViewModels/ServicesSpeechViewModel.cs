@@ -7,7 +7,6 @@ using CognitiveServicesSpeechTest.Operations;
 using CognitiveServicesSpeechTest.Services;
 using Microsoft.CognitiveServices.Speech;
 using Microsoft.CognitiveServices.Speech.Audio;
-using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.PlatformConfiguration.iOSSpecific;
 using Xamarin.Forms.Shapes;
@@ -16,14 +15,14 @@ namespace CognitiveServicesSpeechTest.ViewModels
 {
 	public class ServicesSpeechViewModel: ExtendedBindableObject
     {
-        private readonly AzureSpeechToText _listener;
-        private readonly AzureTextToSpeech _talker;
+        private readonly SpeechToTextOnce _listener;
+        private readonly TextToSpeechOnce _talker;
         private readonly SpeechConfig _config;
 
         public ServicesSpeechViewModel()
 		{
-            _listener = new AzureSpeechToText();
-            _talker = new AzureTextToSpeech();
+            _listener = new SpeechToTextOnce();
+            _talker = new TextToSpeechOnce();
 
             _config = SpeechConfig.FromSubscription(AppConsts.CognitiveServicesApiKey, AppConsts.CognitiveServicesRegion);
             _config.SpeechSynthesisVoiceName = "en-US-JennyMultilingualNeural";
@@ -31,11 +30,11 @@ namespace CognitiveServicesSpeechTest.ViewModels
         }
 
 
-        private string _macAddress;
-        public string MacAddress
+        private string _title;
+        public string Title
         {
-            get => _macAddress;
-            set => SetProperty(ref _macAddress, value);
+            get => _title;
+            set => SetProperty(ref _title, value);
         }
 
        
@@ -60,26 +59,50 @@ namespace CognitiveServicesSpeechTest.ViewModels
             }
         }
 
-        private ICommand _speechToTextCommand;
-        public ICommand SpeechToTextCommand
+        private ICommand _speechToTextOnceCommand;
+        public ICommand SpeechToTextOnceCommand
         {
             get
             {
-                _speechToTextCommand = _speechToTextCommand ?? new Command(async () => await OnSpeechToTextCommand());
-                return _speechToTextCommand;
+                _speechToTextOnceCommand = _speechToTextOnceCommand ?? new Command(async () => await OnSpeechToTextOnceCommand());
+                return _speechToTextOnceCommand;
             }
         }
 
-        private ICommand _textToSpeechWithKeyword;
-        public ICommand TextToSpeechWithKeyword
+        private ICommand _speechToTextContinuousCommand;
+        public ICommand SpeechToTextContinuousCommand
         {
             get
             {
-                _textToSpeechWithKeyword = _textToSpeechWithKeyword ?? new Command(async () => await OnTextToSpeechWithKeyword());
-                return _textToSpeechWithKeyword;
+                _speechToTextContinuousCommand = _speechToTextContinuousCommand ?? new Command(async () => await OnSpeechToTextContinuousCommand());
+                return _speechToTextContinuousCommand;
             }
         }
 
+
+        private ICommand _textToSpeechWithKeywordOnceCommand;
+        public ICommand SpeecToTexthWithKeywordOnceCommand
+        {
+            get
+            {
+                _textToSpeechWithKeywordOnceCommand = _textToSpeechWithKeywordOnceCommand ?? new Command(async () => await OnSpeecToTexthWithKeywordOnceCommand());
+                return _textToSpeechWithKeywordOnceCommand;
+            }
+        }
+
+
+        private ICommand _speechToTextWithKeywordContinuousCommand;
+        public ICommand SpeechToTextWithKeywordContinuousCommand
+        {
+            get
+            {
+                _speechToTextWithKeywordContinuousCommand = _speechToTextWithKeywordContinuousCommand ?? new Command(async () => await OnSpeechToTextWithKeywordContinuousCommand());
+                return _speechToTextWithKeywordContinuousCommand;
+            }
+        }
+
+       
+        
         private async Task OnEnableMicrophonetCommand()
         {
            
@@ -90,8 +113,8 @@ namespace CognitiveServicesSpeechTest.ViewModels
                // UpdateUI("Please give access to microphone");
             }                      
         }
-
-        private async Task OnSpeechToTextCommand()
+        
+        private async Task OnTextToSpeechCommand()
         {
             using (var speechSynthesizer = new SpeechSynthesizer(_config))
             {
@@ -103,7 +126,7 @@ namespace CognitiveServicesSpeechTest.ViewModels
             //var text = $"Hello, let's hear how is  well-being and activity today";
             //var result = await synthesizer.SpeakTextAsync($"Hello, let's hear how is  well-being and activity today");
 
-            //var talker = new AzureTextToSpeech();
+            //var talker = new TextToSpeechOnce();
             //var result = await talker.SpeakTextAsync($"Hello, let's hear how is  well-being and activity today");
             //Debug.WriteLine(result.Reason);
 
@@ -112,43 +135,53 @@ namespace CognitiveServicesSpeechTest.ViewModels
 
             //await Task.Run(async () =>
             //{
-            //    var talker = new AzureTextToSpeech();
+            //    var talker = new TextToSpeechOnce();
             //    var result = await talker.SpeakTextAsync(TalkConsts.Greet);
             //    Debug.WriteLine(result.Reason);
             //});
 
             //await Device.InvokeOnMainThreadAsync(async () =>
             //{
-            //    var talker = new AzureTextToSpeech();
+            //    var talker = new TextToSpeechOnce();
             //    var result = await talker.SpeakTextAsync($"Hello, let's hear how is  well-being and activity today");
 
             //});
-            //
         }
 
 
-        private async Task OnTextToSpeechWithKeyword()
+        private async Task OnSpeechToTextWithKeywordContinuousCommand()
         {
-            var listener = new TextToSpeechWithKeyword();
-            await listener.StartRecognize();
+            var listener = new SpeechToTextWithKeywordContinuous();
+            await listener.StartContinuousRecognizeAsync();
         }
 
-        private async Task OnTextToSpeechCommand()
+        private async Task OnSpeechToTextContinuousCommand()
+        {
+            var listener = new SpeechToTextContinuous();
+            var result = await listener.StartContinuousRecognizeAsync();         
+        }
+
+        private async Task OnSpeechToTextOnceCommand()
         {
             //var speechConfig = SpeechConfig.FromSubscription(Consts.AppConsts.CognitiveServicesApiKey, Consts.AppConsts.CognitiveServicesRegion);
             //speechConfig.SpeechRecognitionLanguage = "en-US";
-
             //using var audioConfig = AudioConfig.FromDefaultMicrophoneInput();
             //using var speechRecognizer = new SpeechRecognizer(speechConfig, audioConfig);
-
             //Console.WriteLine("Speak into your microphone.");
-            //var speechRecognitionResult = await speechRecognizer.RecognizeOnceAsync();
-            //OutputSpeechRecognitionResult(speechRecognitionResult);
+            //var speechRecognitionResult = await speechRecognizer.RecognizeOnceAsync();            
 
-            //var talker = new AzureSpeechToText();
+            //var talker = new SpeechToTextOnce();
             //var result = await talker.RecognizeOnceAsync();
 
             var result = await _listener.RecognizeOnceAsync();
+        }
+
+
+        private async Task OnSpeecToTexthWithKeywordOnceCommand()
+        {
+            var listener = new SpeechToTextWithKeywordOnce();
+            var result = await listener.RecognizeOnceAsync();
+            Debug.WriteLine($"Text={result.Text} Reason={result.Reason}");
         }
 
         private void OnSpeechTextAudioCommand()

@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace CognitiveServicesSpeechTest.Operations
 {
-    public class AzureTextToSpeech
+    public class TextToSpeechOnce
     {
         SpeechConfig config;
 
-        public AzureTextToSpeech()
+        public TextToSpeechOnce()
         {
             config = SpeechConfig.FromSubscription(AppConsts.CognitiveServicesApiKey, AppConsts.CognitiveServicesRegion);
             config.SpeechSynthesisVoiceName = "en-US-JennyMultilingualNeural";

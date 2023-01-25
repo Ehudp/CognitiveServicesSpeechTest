@@ -7,15 +7,16 @@ using System.Diagnostics;
 
 namespace CognitiveServicesSpeechTest.Operations
 {
-	public class AzureSpeechToText
+	public class SpeechToTextOnce
 	{
         SpeechConfig _speechConfig;
 
-        public AzureSpeechToText()
+        public SpeechToTextOnce()
         {
             _speechConfig = SpeechConfig.FromSubscription(AppConsts.CognitiveServicesApiKey, AppConsts.CognitiveServicesRegion);            
         }
 
+        //The end of a single utterance is determined by listening for silence at the end or until a maximum of 15 seconds of audio is processed.
         public async Task<SpeechRecognitionResult> RecognizeOnceAsync()
         {
 

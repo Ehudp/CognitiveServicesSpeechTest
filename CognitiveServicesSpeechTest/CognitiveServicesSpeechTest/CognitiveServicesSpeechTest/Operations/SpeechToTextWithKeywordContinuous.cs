@@ -4,22 +4,21 @@ using System.Threading.Tasks;
 using CognitiveServicesSpeechTest.Consts;
 using CognitiveServicesSpeechTest.Services;
 using Microsoft.CognitiveServices.Speech;
-using Microsoft.CognitiveServices.Speech.Audio;
 using Xamarin.Forms;
 
 namespace CognitiveServicesSpeechTest.Operations
 {
-	public class TextToSpeechWithKeyword
-	{
+    public class SpeechToTextWithKeywordContinuous
+    {
         private string kwsModelFile = "kws.table";
         SpeechConfig _config;
 
-        public TextToSpeechWithKeyword()
-		{
+        public SpeechToTextWithKeywordContinuous()
+        {
             _config = SpeechConfig.FromSubscription(AppConsts.CognitiveServicesApiKey, AppConsts.CognitiveServicesRegion);
         }
 
-        public async Task StartRecognize()
+        public async Task StartContinuousRecognizeAsync()
         {
             try
             {
@@ -42,20 +41,19 @@ namespace CognitiveServicesSpeechTest.Operations
                     // Subscribes to events.
                     recognizer.Recognized += (s, e) =>
                     {
-                        OutputSpeechRecognitionResult(e.Result);
-                        //if (e.Result.Reason == ResultReason.RecognizedKeyword)
-                        //{
-                        //    resultStr = $"RECOGNIZED KEYWORD: '{e.Result.Text}'";
-                        //}
-                        //else if (e.Result.Reason == ResultReason.RecognizedSpeech)
-                        //{
-                        //    resultStr = $"RECOGNIZED: '{e.Result.Text}'";
-                        //}
-                        //else if (e.Result.Reason == ResultReason.NoMatch)
-                        //{
-                        //    resultStr = "NOMATCH: Speech could not be recognized.";
-                        //}
-                        //Debug.WriteLine(resultStr);
+                        if (e.Result.Reason == ResultReason.RecognizedKeyword)
+                        {
+                            resultStr = $"RECOGNIZED KEYWORD: '{e.Result.Text}'";
+                        }
+                        else if (e.Result.Reason == ResultReason.RecognizedSpeech)
+                        {
+                            resultStr = $"RECOGNIZED: '{e.Result.Text}'";
+                        }
+                        else if (e.Result.Reason == ResultReason.NoMatch)
+                        {
+                            resultStr = "NOMATCH: Speech could not be recognized.";
+                        }
+                        Debug.WriteLine(resultStr);
                         //UpdateUI(resultStr);
                     };
 
@@ -65,7 +63,7 @@ namespace CognitiveServicesSpeechTest.Operations
                         resultStr = $"CANCELED: Reason={cancellation.Reason} ErrorDetails={cancellation.ErrorDetails}";
                         if (cancellation.Reason == CancellationReason.Error)
                         {
-                           // UpdateUI(resultStr);
+                            // UpdateUI(resultStr);
                         }
                         Debug.WriteLine(resultStr);
                         stopRecognition.TrySetResult(0);
@@ -87,12 +85,12 @@ namespace CognitiveServicesSpeechTest.Operations
 
                     // Starts continuous recognition using the keyword model. Use StopKeywordRecognitionAsync() to stop recognition.
                     await recognizer.StartKeywordRecognitionAsync(model).ConfigureAwait(false);
-
+                    
                     // Waits for a single successful keyword-triggered speech recognition (or error).
                     // Use Task.WaitAny to keep the task rooted.
                     Task.WaitAny(new[] { stopRecognition.Task });
 
-                    await recognizer.StopKeywordRecognitionAsync().ConfigureAwait(false);
+                    await recognizer.StopKeywordRecognitionAsync().ConfigureAwait(false);                  
                 }
             }
             catch (Exception ex)
@@ -106,6 +104,9 @@ namespace CognitiveServicesSpeechTest.Operations
         {
             switch (speechRecognitionResult.Reason)
             {
+                case ResultReason.RecognizedKeyword:
+                    Debug.WriteLine($"RECOGNIZED: Text={speechRecognitionResult.Text} Reason={speechRecognitionResult.Reason}");
+                    break;
                 case ResultReason.RecognizedSpeech:
                     Debug.WriteLine($"RECOGNIZED: Text={speechRecognitionResult.Text} Reason={speechRecognitionResult.Reason}");
                     break;
@@ -127,4 +128,3 @@ namespace CognitiveServicesSpeechTest.Operations
         }
     }
 }
-
