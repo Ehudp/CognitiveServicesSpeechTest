@@ -19,8 +19,12 @@ namespace CognitiveServicesSpeechTest.Operations
         //The end of a single utterance is determined by listening for silence at the end or until a maximum of 15 seconds of audio is processed.
         public async Task<SpeechRecognitionResult> RecognizeOnceAsync()
         {
+            //can play with timeout
+            //https://learn.microsoft.com/en-us/azure/cognitive-services/speech-service/how-to-recognize-speech?pivots=programming-language-csharp#:~:text=speechConfig.SetProperty(PropertyId.-,Speech_SegmentationSilenceTimeoutMs,-%2C%20%222000%22
+            //_speechConfig.SetProperty(PropertyId.Speech_SegmentationSilenceTimeoutMs, "300");
+            //_speechConfig.SetProperty(PropertyId.SpeechServiceConnection_InitialSilenceTimeoutMs, "10000");
 
-                using var audioConfig = AudioConfig.FromDefaultMicrophoneInput();
+            using var audioConfig = AudioConfig.FromDefaultMicrophoneInput();
                 using var speechRecognizer = new SpeechRecognizer(_speechConfig, audioConfig);
 
                 var result = await speechRecognizer.RecognizeOnceAsync();
