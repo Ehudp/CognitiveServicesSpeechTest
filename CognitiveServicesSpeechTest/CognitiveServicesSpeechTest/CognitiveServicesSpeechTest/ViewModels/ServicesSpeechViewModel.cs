@@ -101,8 +101,18 @@ namespace CognitiveServicesSpeechTest.ViewModels
             }
         }
 
+        private ICommand _speechToTextIntentRecognizerOnceCommand;
+        public ICommand SpeechToTextIntentRecognizerOnceCommand
+        {
+            get
+            {
+                _speechToTextIntentRecognizerOnceCommand = _speechToTextIntentRecognizerOnceCommand ?? new Command(async () => await OnSpeechToTextIntentRecognizerOnceCommand());
+                return _speechToTextIntentRecognizerOnceCommand;
+            }
+        }
+
        
-        
+
         private async Task OnEnableMicrophonetCommand()
         {
            
@@ -116,36 +126,21 @@ namespace CognitiveServicesSpeechTest.ViewModels
         
         private async Task OnTextToSpeechCommand()
         {
-            using (var speechSynthesizer = new SpeechSynthesizer(_config))
-            {
-                await speechSynthesizer.SpeakTextAsync($"Hello, let's hear how is  well-being and activity today");
-                await speechSynthesizer.SpeakTextAsync(TalkConsts.Greet);
-            }
+            var text = $"Hello, let's hear how is  well-being and activity today";
+            await _talker.SpeakTextAsync(text);
+            var result = await _talker.SpeakTextAsync(TalkConsts.Greet);
+            Debug.WriteLine(result.Reason);
+
+            //using (var speechSynthesizer = new SpeechSynthesizer(_config))
+            //{
+            //    await speechSynthesizer.SpeakTextAsync($"Hello, let's hear how is  well-being and activity today");
+            //    await speechSynthesizer.SpeakTextAsync(TalkConsts.Greet);
+            //}
 
             //using var synthesizer = new SpeechSynthesizer(_config, null);
             //var text = $"Hello, let's hear how is  well-being and activity today";
             //var result = await synthesizer.SpeakTextAsync($"Hello, let's hear how is  well-being and activity today");
 
-            //var talker = new TextToSpeechOnce();
-            //var result = await talker.SpeakTextAsync($"Hello, let's hear how is  well-being and activity today");
-            //Debug.WriteLine(result.Reason);
-
-            //var result = await _talker.SpeakTextAsync(TalkConsts.Greet);
-            //Debug.WriteLine(result.Reason);
-
-            //await Task.Run(async () =>
-            //{
-            //    var talker = new TextToSpeechOnce();
-            //    var result = await talker.SpeakTextAsync(TalkConsts.Greet);
-            //    Debug.WriteLine(result.Reason);
-            //});
-
-            //await Device.InvokeOnMainThreadAsync(async () =>
-            //{
-            //    var talker = new TextToSpeechOnce();
-            //    var result = await talker.SpeakTextAsync($"Hello, let's hear how is  well-being and activity today");
-
-            //});
         }
 
 
@@ -160,6 +155,14 @@ namespace CognitiveServicesSpeechTest.ViewModels
             var listener = new SpeechToTextContinuous();
             var result = await listener.StartContinuousRecognizeAsync();         
         }
+
+
+        private async Task OnSpeechToTextIntentRecognizerOnceCommand()
+        {
+            var listener = new SpeechToTextIntentRecognizerOnce();
+            var result = await listener.RecognizeOnceAsync();
+        }
+
 
         private async Task OnSpeechToTextOnceCommand()
         {

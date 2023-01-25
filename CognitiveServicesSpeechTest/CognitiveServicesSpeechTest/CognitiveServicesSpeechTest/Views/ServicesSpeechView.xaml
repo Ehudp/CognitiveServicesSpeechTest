@@ -21,6 +21,9 @@
         <Button Text="Speech To Text With Keyword Continuous"
             Command="{Binding SpeechToTextWithKeywordContinuousCommand}" />
 
+        <Button Text="Speech To Text Intent Recognizer Once"
+            Command="{Binding SpeechToTextIntentRecognizerOnceCommand}" />
+
 
     </StackLayout>
 
