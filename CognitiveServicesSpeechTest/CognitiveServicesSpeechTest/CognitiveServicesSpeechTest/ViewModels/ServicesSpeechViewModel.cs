@@ -16,14 +16,15 @@ namespace CognitiveServicesSpeechTest.ViewModels
 {
 	public class ServicesSpeechViewModel: ExtendedBindableObject
     {
-        //private readonly AzureSpeechToText _listener;
-        //private readonly AzureTextToSpeech _talker;
+        private readonly AzureSpeechToText _listener;
+        private readonly AzureTextToSpeech _talker;
         private readonly SpeechConfig _config;
 
         public ServicesSpeechViewModel()
 		{
-            //_listener = new AzureSpeechToText();
-            //_talker = new AzureTextToSpeech();
+            _listener = new AzureSpeechToText();
+            _talker = new AzureTextToSpeech();
+
             _config = SpeechConfig.FromSubscription(AppConsts.CognitiveServicesApiKey, AppConsts.CognitiveServicesRegion);
             _config.SpeechSynthesisVoiceName = "en-US-JennyMultilingualNeural";
             _config.SetSpeechSynthesisOutputFormat(SpeechSynthesisOutputFormat.Raw48Khz16BitMonoPcm);
@@ -37,15 +38,7 @@ namespace CognitiveServicesSpeechTest.ViewModels
             set => SetProperty(ref _macAddress, value);
         }
 
-        private ICommand _speechToTextCommand;
-        public ICommand SpeechToTextCommand
-        {
-            get
-            {
-                _speechToTextCommand = _speechToTextCommand ?? new Command(async ()=> await OnSpeechToTextCommand());
-                return _speechToTextCommand;
-            }
-        }
+       
 
         private ICommand _enableMicrophonetCommand;
         public ICommand EnableMicrophonetCommand
@@ -54,6 +47,36 @@ namespace CognitiveServicesSpeechTest.ViewModels
             {
                 _enableMicrophonetCommand = _enableMicrophonetCommand ?? new Command(async () => await OnEnableMicrophonetCommand());
                 return _enableMicrophonetCommand;
+            }
+        }
+
+        private ICommand _textToSpeechCommand;
+        public ICommand TextToSpeechCommand
+        {
+            get
+            {
+                _textToSpeechCommand = _textToSpeechCommand ?? new Command(async () => await OnTextToSpeechCommand());
+                return _textToSpeechCommand;
+            }
+        }
+
+        private ICommand _speechToTextCommand;
+        public ICommand SpeechToTextCommand
+        {
+            get
+            {
+                _speechToTextCommand = _speechToTextCommand ?? new Command(async () => await OnSpeechToTextCommand());
+                return _speechToTextCommand;
+            }
+        }
+
+        private ICommand _textToSpeechWithKeyword;
+        public ICommand TextToSpeechWithKeyword
+        {
+            get
+            {
+                _textToSpeechWithKeyword = _textToSpeechWithKeyword ?? new Command(async () => await OnTextToSpeechWithKeyword());
+                return _textToSpeechWithKeyword;
             }
         }
 
@@ -70,11 +93,11 @@ namespace CognitiveServicesSpeechTest.ViewModels
 
         private async Task OnSpeechToTextCommand()
         {
-            //using (var speechSynthesizer = new SpeechSynthesizer(_config))
-            //{
-            //    await speechSynthesizer.SpeakTextAsync($"Hello, let's hear how is  well-being and activity today");
-            //    await speechSynthesizer.SpeakTextAsync(TalkConsts.Greet);
-            //}
+            using (var speechSynthesizer = new SpeechSynthesizer(_config))
+            {
+                await speechSynthesizer.SpeakTextAsync($"Hello, let's hear how is  well-being and activity today");
+                await speechSynthesizer.SpeakTextAsync(TalkConsts.Greet);
+            }
 
             //using var synthesizer = new SpeechSynthesizer(_config, null);
             //var text = $"Hello, let's hear how is  well-being and activity today";
@@ -87,12 +110,12 @@ namespace CognitiveServicesSpeechTest.ViewModels
             //var result = await _talker.SpeakTextAsync(TalkConsts.Greet);
             //Debug.WriteLine(result.Reason);
 
-            await Task.Run(async () =>
-            {
-                var talker = new AzureTextToSpeech();
-                var result = await talker.SpeakTextAsync(TalkConsts.Greet);
-                Debug.WriteLine(result.Reason);
-            });
+            //await Task.Run(async () =>
+            //{
+            //    var talker = new AzureTextToSpeech();
+            //    var result = await talker.SpeakTextAsync(TalkConsts.Greet);
+            //    Debug.WriteLine(result.Reason);
+            //});
 
             //await Device.InvokeOnMainThreadAsync(async () =>
             //{
@@ -103,60 +126,41 @@ namespace CognitiveServicesSpeechTest.ViewModels
             //
         }
 
-        private ICommand _textToSpeechCommand;
-        public ICommand TextToSpeechCommand
+
+        private async Task OnTextToSpeechWithKeyword()
         {
-            get
-            {
-                _textToSpeechCommand = _textToSpeechCommand ?? new Command(async () => await OnTextToSpeechCommand());
-                return _textToSpeechCommand;
-            }
+            var listener = new TextToSpeechWithKeyword();
+            await listener.StartRecognize();
         }
 
         private async Task OnTextToSpeechCommand()
         {
-            var speechConfig = SpeechConfig.FromSubscription(Consts.AppConsts.CognitiveServicesApiKey, Consts.AppConsts.CognitiveServicesRegion);
-            speechConfig.SpeechRecognitionLanguage = "en-US";
+            //var speechConfig = SpeechConfig.FromSubscription(Consts.AppConsts.CognitiveServicesApiKey, Consts.AppConsts.CognitiveServicesRegion);
+            //speechConfig.SpeechRecognitionLanguage = "en-US";
 
-            using var audioConfig = AudioConfig.FromDefaultMicrophoneInput();
-            using var speechRecognizer = new SpeechRecognizer(speechConfig, audioConfig);
+            //using var audioConfig = AudioConfig.FromDefaultMicrophoneInput();
+            //using var speechRecognizer = new SpeechRecognizer(speechConfig, audioConfig);
 
-            Console.WriteLine("Speak into your microphone.");
-            var speechRecognitionResult = await speechRecognizer.RecognizeOnceAsync();
-            OutputSpeechRecognitionResult(speechRecognitionResult);
+            //Console.WriteLine("Speak into your microphone.");
+            //var speechRecognitionResult = await speechRecognizer.RecognizeOnceAsync();
+            //OutputSpeechRecognitionResult(speechRecognitionResult);
+
+            //var talker = new AzureSpeechToText();
+            //var result = await talker.RecognizeOnceAsync();
+
+            var result = await _listener.RecognizeOnceAsync();
         }
 
         private void OnSpeechTextAudioCommand()
         {
+
             //var config = SpeechConfig.FromSubscription(key, region);
             //using var audioConfig = AudioConfig.FromWavFileOutput(@"C:\repos\AzureCognitiveServices\AzureCognitiveServices\Speech\chapter7-OUT.wav");
             //using var synthesizer = new SpeechSynthesizer(config, audioConfig);
             //await synthesizer.SpeakTextAsync(ExampleText.ChapterExample2);
         }
 
-        static void OutputSpeechRecognitionResult(SpeechRecognitionResult speechRecognitionResult)
-        {
-            switch (speechRecognitionResult.Reason)
-            {
-                case ResultReason.RecognizedSpeech:
-                    Console.WriteLine($"RECOGNIZED: Text={speechRecognitionResult.Text}");
-                    break;
-                case ResultReason.NoMatch:
-                    Console.WriteLine($"NOMATCH: Speech could not be recognized.");
-                    break;
-                case ResultReason.Canceled:
-                    var cancellation = CancellationDetails.FromResult(speechRecognitionResult);
-                    Console.WriteLine($"CANCELED: Reason={cancellation.Reason}");
-
-                    if (cancellation.Reason == CancellationReason.Error)
-                    {
-                        Console.WriteLine($"CANCELED: ErrorCode={cancellation.ErrorCode}");
-                        Console.WriteLine($"CANCELED: ErrorDetails={cancellation.ErrorDetails}");
-                        Console.WriteLine($"CANCELED: Did you set the speech resource key and region values?");
-                    }
-                    break;
-            }
-        }
+       
     }
 }
 

@@ -12,6 +12,7 @@
         <Button Text="Enable Microphonet" Command="{Binding EnableMicrophonetCommand}"/> 
         <Button Text="Speech To Text" Command="{Binding SpeechToTextCommand}" />
         <Button Text="Text To Speech" Command="{Binding TextToSpeechCommand}" />
+        <Button Text="Text To Speech With Keyword" Command="{Binding TextToSpeechWithKeyword}" />
     </StackLayout>
 
 </ContentView>

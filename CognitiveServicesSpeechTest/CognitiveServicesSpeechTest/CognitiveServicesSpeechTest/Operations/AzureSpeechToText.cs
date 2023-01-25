@@ -2,60 +2,55 @@
 using CognitiveServicesSpeechTest.Consts;
 using Microsoft.CognitiveServices.Speech;
 using System.Threading.Tasks;
+using Microsoft.CognitiveServices.Speech.Audio;
+using System.Diagnostics;
 
 namespace CognitiveServicesSpeechTest.Operations
 {
 	public class AzureSpeechToText
 	{
-        //public async Task<string> Recognize()
-        //{
+        SpeechConfig _speechConfig;
 
-        //    try
-        //    {
-        //        var path = AppServices.GetIocDependcy<IPathOSProvider>().GetPath("azure");
-        //        AppServices.GetIocDependcy<IPathOSProvider>().CreateDir(path);
-        //        var filePath = $"{path}/speechToText.txt";
+        public AzureSpeechToText()
+        {
+            _speechConfig = SpeechConfig.FromSubscription(AppConsts.CognitiveServicesApiKey, AppConsts.CognitiveServicesRegion);            
+        }
 
+        public async Task<SpeechRecognitionResult> RecognizeOnceAsync()
+        {
 
-        //        var config = SpeechConfig.FromSubscription(AppConsts.CognitiveServicesApiKey,
-        //                AppConsts.CognitiveServicesRegion);
-        //        using var recognizer = new SpeechRecognizer(config);
-        //        config.SetProperty(PropertyId.Speech_LogFilename, filePath);
-        //        var sound = Mvx.IoCProvider.Resolve<IAudioProvider>();
-        //        sound.PlaySound(AppConsts.Audio.SuccessSound);
-        //        var result = await recognizer.RecognizeOnceAsync();
-        //        var newMessage = string.Empty;
-        //        if (result.Reason == ResultReason.RecognizedSpeech)
-        //        {
-        //            newMessage = result.Text;
-        //        }
-        //        else if (result.Reason == ResultReason.NoMatch)
-        //        {
-        //            newMessage = "NOMATCH: Speech could not be recognized.";
-        //        }
-        //        else if (result.Reason == ResultReason.Canceled)
-        //        {
-        //            var cancellation = CancellationDetails.FromResult(result);
-        //            newMessage = $"CANCELED: Reason={cancellation.Reason} ErrorDetails={cancellation.ErrorDetails}";
-        //        }
+                using var audioConfig = AudioConfig.FromDefaultMicrophoneInput();
+                using var speechRecognizer = new SpeechRecognizer(_speechConfig, audioConfig);
 
-        //        return newMessage;
+                var result = await speechRecognizer.RecognizeOnceAsync();
+                OutputSpeechRecognitionResult(result);
+                return result;
 
+        }
 
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        AppServices.GetIocDependcy<ILogService>().HandleException(ex);
-        //    }
+        void OutputSpeechRecognitionResult(SpeechRecognitionResult speechRecognitionResult)
+        {
+            switch (speechRecognitionResult.Reason)
+            {
+                case ResultReason.RecognizedSpeech:
+                    Debug.WriteLine($"RECOGNIZED: Text={speechRecognitionResult.Text} Reason={speechRecognitionResult.Reason}");
+                    break;
+                case ResultReason.NoMatch:
+                    Debug.WriteLine($"NOMATCH: Speech could not be recognized.");
+                    break;
+                case ResultReason.Canceled:
+                    var cancellation = CancellationDetails.FromResult(speechRecognitionResult);
+                    Debug.WriteLine($"CANCELED: Reason={cancellation.Reason}");
 
-        //    return string.Empty;
-        //}
-
-        //private string GetRecognitionResult(SpeechRecognitionResult result) => result.Reason switch
-        //{
-        //    ResultReason.RecognizedSpeech => result.Text,
-        //    _ => string.Empty
-        //};
+                    if (cancellation.Reason == CancellationReason.Error)
+                    {
+                        Debug.WriteLine($"CANCELED: ErrorCode={cancellation.ErrorCode}");
+                        Debug.WriteLine($"CANCELED: ErrorDetails={cancellation.ErrorDetails}");
+                        Debug.WriteLine($"CANCELED: Did you set the speech resource key and region values?");
+                    }
+                    break;
+            }
+        }
     }
 }
 

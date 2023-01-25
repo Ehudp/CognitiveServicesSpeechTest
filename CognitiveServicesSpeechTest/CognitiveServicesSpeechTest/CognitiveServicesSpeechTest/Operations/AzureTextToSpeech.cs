@@ -23,7 +23,7 @@ namespace CognitiveServicesSpeechTest.Operations
 
             SpeechSynthesisResult speechResult;
 
-            using (var synthesizer = new SpeechSynthesizer(config, null))
+            using (var synthesizer = new SpeechSynthesizer(config))
             {
                 speechResult = await synthesizer.SpeakTextAsync(text);
             }
@@ -35,5 +35,7 @@ namespace CognitiveServicesSpeechTest.Operations
             //var buffer = GetBuffer(stream);
             //await audio.PlayFromStream(48000, false, buffer.Item1, buffer.Item2);
         }
+
+
     }
 }
