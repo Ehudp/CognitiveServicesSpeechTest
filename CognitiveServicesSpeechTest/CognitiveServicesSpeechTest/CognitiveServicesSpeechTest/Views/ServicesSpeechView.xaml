@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:viewmodels="clr-namespace:CognitiveServicesSpeechTest.ViewModels"
+    x:Class="CognitiveServicesSpeechTest.Views.ServicesSpeechView"
+>
+    <ContentView.BindingContext>
+        <viewmodels:ServicesSpeechViewModel />
+    </ContentView.BindingContext>
+    <StackLayout>
+        <Button Text="Enable Microphonet" Command="{Binding EnableMicrophonetCommand}"/> 
+        <Button Text="Speech To Text" Command="{Binding SpeechToTextCommand}" />
+        <Button Text="Text To Speech" Command="{Binding TextToSpeechCommand}" />
+    </StackLayout>
+
+</ContentView>
