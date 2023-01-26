@@ -9,8 +9,7 @@ namespace CognitiveServicesSpeechTest.Operations
 {
 	public class SpeechToTextContinuous
     {
-        SpeechConfig _config;
-        TaskCompletionSource<int> _stopRecognition;
+        SpeechConfig _config;        
 
         public SpeechToTextContinuous()
         {
@@ -19,7 +18,7 @@ namespace CognitiveServicesSpeechTest.Operations
         
         public async Task<bool> StartContinuousRecognizeAsync()
         {
-            _stopRecognition = new TaskCompletionSource<int>();
+            var stopRecognition = new TaskCompletionSource<int>();
             using var audioConfig = AudioConfig.FromDefaultMicrophoneInput();
             using var recognizer = new SpeechRecognizer(_config, audioConfig);
             recognizer.Recognizing += (s, e) =>
@@ -35,7 +34,7 @@ namespace CognitiveServicesSpeechTest.Operations
                     if (e.Result.Text.Contains("Cancel"))
                     {
                         Console.WriteLine($"RECOGNIZED: Cancle Recognized Speech");
-                        _stopRecognition.TrySetResult(0);
+                        stopRecognition.TrySetResult(0);
                     }
                 }
                 else if (e.Result.Reason == ResultReason.NoMatch)
@@ -55,13 +54,13 @@ namespace CognitiveServicesSpeechTest.Operations
                     Console.WriteLine($"CANCELED: Did you set the speech resource key and region values?");
                 }
 
-                _stopRecognition.TrySetResult(0);
+                stopRecognition.TrySetResult(0);
             };
 
             recognizer.SessionStopped += (s, e) =>
             {
                 Console.WriteLine("\n    Session stopped event.");
-                _stopRecognition.TrySetResult(0);
+                stopRecognition.TrySetResult(0);
             };
 
             recognizer.SessionStarted += (s, e) =>
@@ -72,7 +71,7 @@ namespace CognitiveServicesSpeechTest.Operations
             await recognizer.StartContinuousRecognitionAsync();            
 
             // Waits for completion. Use Task.WaitAny to keep the task rooted.
-            Task.WaitAny(new[] { _stopRecognition.Task });
+            Task.WaitAny(new[] { stopRecognition.Task });
 
             // Make the following call at some point to stop recognition:
             await recognizer.StopContinuousRecognitionAsync();
@@ -83,7 +82,7 @@ namespace CognitiveServicesSpeechTest.Operations
         public void StoptContinuousRecognizeAsync()
         {
             Console.WriteLine("StoptContinuousRecognizeAsync");
-            _stopRecognition.TrySetResult(0);           
+            //stopRecognition.TrySetResult(0);           
         }
     }
 }

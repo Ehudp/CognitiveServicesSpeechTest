@@ -11,9 +11,11 @@
     <StackLayout >
         
         <Button Text="Enable Microphonet" Command="{Binding EnableMicrophonetCommand}" />
+
         <Button Text="Text To Speech Once" Command="{Binding TextToSpeechCommand}" />
 
         <Button Text="Speech To Text Once" Command="{Binding SpeechToTextOnceCommand}" />
+
         <Button Text="Speech To Text Continuous" Command="{Binding SpeechToTextContinuousCommand}" />
 
         <Button Text="Speech To Text With Keyword Once"
@@ -25,6 +27,11 @@
         <Button Text="Speech To Text Intent Recognizer Once"
             Command="{Binding SpeechToTextIntentRecognizerOnceCommand}" />
 
+         <Button Text="Speech To Text Intent Recognizer Continuous"
+            Command="{Binding SpeechToTextIntentRecognizerContinuousCommand}" />
+
+         <Button Text="Speech To Text Intent Recognizer Continuous With Keyword"
+            Command="{Binding SpeechToTextIntentRecognizerContinuousKeywordCommand}" />
 
     </StackLayout>
 

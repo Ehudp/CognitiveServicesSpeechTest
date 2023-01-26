@@ -111,7 +111,25 @@ namespace CognitiveServicesSpeechTest.ViewModels
             }
         }
 
-       
+        private ICommand _speechToTextIntentRecognizerContinuousCommand;
+        public ICommand SpeechToTextIntentRecognizerContinuousCommand
+        {
+            get
+            {
+                _speechToTextIntentRecognizerContinuousCommand = _speechToTextIntentRecognizerContinuousCommand ?? new Command(async () => await OnSpeechToTextIntentRecognizerContinuousCommand());
+                return _speechToTextIntentRecognizerContinuousCommand;
+            }
+        }
+
+        private ICommand _speechToTextIntentRecognizerContinuousKeywordCommand;
+        public ICommand SpeechToTextIntentRecognizerContinuousKeywordCommand
+        {
+            get
+            {
+                _speechToTextIntentRecognizerContinuousKeywordCommand = _speechToTextIntentRecognizerContinuousKeywordCommand ?? new Command(async () => await OnSpeechToTextIntentRecognizerContinuousKeywordCommand());
+                return _speechToTextIntentRecognizerContinuousKeywordCommand;
+            }
+        }
 
         private async Task OnEnableMicrophonetCommand()
         {
@@ -164,6 +182,19 @@ namespace CognitiveServicesSpeechTest.ViewModels
         }
 
 
+        private async Task OnSpeechToTextIntentRecognizerContinuousCommand()
+        {
+            var listener = new SpeechToTextIntentRecognizerContinuous();
+            await listener.StartContinuousRecognitionAsync();
+        }
+
+
+        private async Task OnSpeechToTextIntentRecognizerContinuousKeywordCommand()
+        {
+            var listener = new SpeechToTextIntentRecognizerContinuousKeyword();
+            await listener.StartKeywordRecognitionAsync();
+        }
+
         private async Task OnSpeechToTextOnceCommand()
         {
             //var speechConfig = SpeechConfig.FromSubscription(Consts.AppConsts.CognitiveServicesApiKey, Consts.AppConsts.CognitiveServicesRegion);
@@ -186,6 +217,7 @@ namespace CognitiveServicesSpeechTest.ViewModels
             var result = await listener.RecognizeOnceAsync();
             Debug.WriteLine($"Text={result.Text} Reason={result.Reason}");
         }
+
 
         private void OnSpeechTextAudioCommand()
         {
