@@ -32,6 +32,11 @@ namespace CognitiveServicesSpeechTest.Operations
                 if (e.Result.Reason == ResultReason.RecognizedSpeech)
                 {
                     Console.WriteLine($"RECOGNIZED: Text={e.Result.Text}");
+                    if (e.Result.Text.Contains("Cancel"))
+                    {
+                        Console.WriteLine($"RECOGNIZED: Cancle Recognized Speech");
+                        _stopRecognition.TrySetResult(0);
+                    }
                 }
                 else if (e.Result.Reason == ResultReason.NoMatch)
                 {
