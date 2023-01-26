@@ -8,7 +8,8 @@
     <ContentView.BindingContext>
         <viewmodels:ServicesSpeechViewModel />
     </ContentView.BindingContext>
-    <StackLayout>
+    <StackLayout >
+        
         <Button Text="Enable Microphonet" Command="{Binding EnableMicrophonetCommand}" />
         <Button Text="Text To Speech Once" Command="{Binding TextToSpeechCommand}" />
 

@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using CognitiveServicesSpeechTest.iOS.Services;
+using CognitiveServicesSpeechTest.Services;
 using Foundation;
 using UIKit;
 
@@ -25,6 +26,9 @@ namespace CognitiveServicesSpeechTest.iOS
             global::Xamarin.Forms.Forms.Init();
             LoadApplication(new App());
 
+
+            Xamarin.Forms.DependencyService.Register<IMicrophoneService, MicrophoneService>();
+            Xamarin.Forms.DependencyService.Register<IAssetService, AssetService>();
             return base.FinishedLaunching(app, options);
         }
     }

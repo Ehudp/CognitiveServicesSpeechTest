@@ -5,7 +5,7 @@
              x:Class="CognitiveServicesSpeechTest.MainPage">
 
     <StackLayout>
-      <views:ServicesSpeechView/>
+      <views:ServicesSpeechView Margin="0,40,0,0"/>
     </StackLayout>
 
 </ContentPage>
