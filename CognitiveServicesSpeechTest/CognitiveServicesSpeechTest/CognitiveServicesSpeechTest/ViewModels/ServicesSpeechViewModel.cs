@@ -164,11 +164,6 @@ namespace CognitiveServicesSpeechTest.ViewModels
             //    await speechSynthesizer.SpeakTextAsync($"Hello, let's hear how is  well-being and activity today");
             //    await speechSynthesizer.SpeakTextAsync(TalkConsts.Greet);
             //}
-
-            //using var synthesizer = new SpeechSynthesizer(_config, null);
-            //var text = $"Hello, let's hear how is  well-being and activity today";
-            //var result = await synthesizer.SpeakTextAsync($"Hello, let's hear how is  well-being and activity today");
-
         }
 
 

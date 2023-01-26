@@ -22,7 +22,7 @@ namespace CognitiveServicesSpeechTest.Operations
         {
             try
             {
-                var kwsModelDir = DependencyService.Get<IAssetService>().GetAssetPath(AppConsts.HeyAnimoFile);
+                var kwsModelDir = DependencyService.Get<IAssetService>().GetAssetPath(AppConsts.HeyAnimoAdvancedFile);
                 var model = KeywordRecognitionModel.FromFile(kwsModelDir);
 
                 // The phrase your keyword recognition model triggers on.                
