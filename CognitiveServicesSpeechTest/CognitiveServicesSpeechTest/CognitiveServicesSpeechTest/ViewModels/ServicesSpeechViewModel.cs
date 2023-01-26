@@ -131,6 +131,16 @@ namespace CognitiveServicesSpeechTest.ViewModels
             }
         }
 
+        private ICommand _speechToTextIntentContinuousKeywordConversationCommand;
+        public ICommand SpeechToTextIntentContinuousKeywordConversationCommand
+        {
+            get
+            {
+                _speechToTextIntentContinuousKeywordConversationCommand = _speechToTextIntentContinuousKeywordConversationCommand ?? new Command(async () => await OnSpeechToTextIntentContinuousKeywordConversationCommand());
+                return _speechToTextIntentContinuousKeywordConversationCommand;
+            }
+        }
+
         private async Task OnEnableMicrophonetCommand()
         {
            
@@ -195,21 +205,17 @@ namespace CognitiveServicesSpeechTest.ViewModels
             await listener.StartKeywordRecognitionAsync();
         }
 
-        private async Task OnSpeechToTextOnceCommand()
+
+        private async Task OnSpeechToTextIntentContinuousKeywordConversationCommand()
         {
-            //var speechConfig = SpeechConfig.FromSubscription(Consts.AppConsts.CognitiveServicesApiKey, Consts.AppConsts.CognitiveServicesRegion);
-            //speechConfig.SpeechRecognitionLanguage = "en-US";
-            //using var audioConfig = AudioConfig.FromDefaultMicrophoneInput();
-            //using var speechRecognizer = new SpeechRecognizer(speechConfig, audioConfig);
-            //Console.WriteLine("Speak into your microphone.");
-            //var speechRecognitionResult = await speechRecognizer.RecognizeOnceAsync();            
-
-            //var talker = new SpeechToTextOnce();
-            //var result = await talker.RecognizeOnceAsync();
-
-            var result = await _listener.RecognizeOnceAsync();
+            var listener = new SpeechToTextIntentContinuousKeywordConversation();
+            await listener.StartKeywordRecognitionAsync();
         }
 
+        private async Task OnSpeechToTextOnceCommand()
+        {
+            var result = await _listener.RecognizeOnceAsync();
+        }
 
         private async Task OnSpeecToTexthWithKeywordOnceCommand()
         {

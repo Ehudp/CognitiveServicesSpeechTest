@@ -32,6 +32,9 @@
 
          <Button Text="Speech To Text Intent Recognizer Continuous With Keyword"
             Command="{Binding SpeechToTextIntentRecognizerContinuousKeywordCommand}" />
+    
+          <Button Text="Speech To Text Intent Recognizer Continuous With Keyword Conversation"
+            Command="{Binding SpeechToTextIntentContinuousKeywordConversationCommand}" />
 
     </StackLayout>
 
