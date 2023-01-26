@@ -15,7 +15,6 @@ namespace CognitiveServicesSpeechTest.Operations
             _config = SpeechConfig.FromSubscription(Consts.AppConsts.CognitiveServicesApiKey, Consts.AppConsts.CognitiveServicesRegion);
         }
 
-
         public async Task<IntentRecognitionResult> RecognizeOnceAsync()
         {
             using (var intentRecognizer = new IntentRecognizer(_config))
@@ -30,7 +29,6 @@ namespace CognitiveServicesSpeechTest.Operations
                 OutputSpeechRecognitionResult(result);
                 return result;
             }
-
         }
 
         void OutputSpeechRecognitionResult(IntentRecognitionResult result)

@@ -10,8 +10,7 @@ namespace CognitiveServicesSpeechTest.Operations
 {
     public class SpeechToTextWithKeywordContinuous
     {
-        private string kwsModelFile = "kws.table";
-        SpeechConfig _config;
+        private readonly SpeechConfig _config;
 
         public SpeechToTextWithKeywordContinuous()
         {
@@ -22,15 +21,11 @@ namespace CognitiveServicesSpeechTest.Operations
         {
             try
             {
-                // Creates an instance of a speech config with specified subscription key and service region.
-                // Replace with your own subscription key and service region (e.g., "westus").
-                //var config = SpeechConfig.FromSubscription(CognitiveServicesApiKey, CognitiveServicesRegion);
-
-                var kwsModelDir = DependencyService.Get<IAssetService>().GetAssetPath(kwsModelFile);
+                var kwsModelDir = DependencyService.Get<IAssetService>().GetAssetPath(AppConsts.HeyAnimoFile);
                 var model = KeywordRecognitionModel.FromFile(kwsModelDir);
 
-                // The phrase your keyword recognition model triggers on.
-                var keyword = "Computer";
+                // The phrase your keyword recognition model triggers on.                
+                var keyword = AppConsts.HeyAnimoKeyWork;
 
                 var stopRecognition = new TaskCompletionSource<int>(TaskCreationOptions.RunContinuationsAsynchronously);
                 var resultStr = "";
@@ -85,12 +80,12 @@ namespace CognitiveServicesSpeechTest.Operations
 
                     // Starts continuous recognition using the keyword model. Use StopKeywordRecognitionAsync() to stop recognition.
                     await recognizer.StartKeywordRecognitionAsync(model).ConfigureAwait(false);
-                    
+
                     // Waits for a single successful keyword-triggered speech recognition (or error).
                     // Use Task.WaitAny to keep the task rooted.
                     Task.WaitAny(new[] { stopRecognition.Task });
 
-                    await recognizer.StopKeywordRecognitionAsync().ConfigureAwait(false);                  
+                    await recognizer.StopKeywordRecognitionAsync().ConfigureAwait(false);
                 }
             }
             catch (Exception ex)
@@ -98,6 +93,6 @@ namespace CognitiveServicesSpeechTest.Operations
                 //UpdateUI("Exception: " + ex.ToString());
             }
 
-        }      
+        }
     }
 }
