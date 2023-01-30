@@ -4,7 +4,7 @@ namespace CognitiveServicesSpeechTest.Consts
     public class AppConsts
     {
         //Azure Cognitive Services
-        public const string CognitiveServicesApiKey = "372e131f3b4c484189a6a13016d457a2";//ehud key "ebecbe34b9a7443fa029d27fb224c796";
+        public const string CognitiveServicesApiKey =  "ebecbe34b9a7443fa029d27fb224c796";//ehud key
         public const string CognitiveServicesRegion = "westeurope";
 
         public const string KwsModelKeyword = "Computer";
